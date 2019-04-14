@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <title>2018 US Flights Data</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+
+    <!-- libraries for search form -->
+
+    <link href="//code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet">
+    </link>
+    <script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="//code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/cosmo/bootstrap.min.css"
+        rel="stylesheet" integrity="sha384-uhut8PejFZO8994oEgm/ZfAv0mW1/b83nczZzSwElbeILxwkN491YQXsCFTE6+nx"
+        crossorigin="anonymous">
+
+    <!-- leaflet -->
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Mapbox CSS & JS -->
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet' />
+
+
+    <!-- Our CSS -->
+    <link rel="stylesheet" type="text/css" href="static/js/mystyle.css">
+    <!-- <link rel="javascript" type="text/css" href="static/js/app2.js"> -->
+
+</head>
+
+<body>
+
+    <!-- Jumbotron -->
+    <div class="card card-image"
+        style="background-image: url(https://cdn-goeuro.com/static_content/web/content/rest/default_headers/header-flight-@2x.jpg);">
+        <div class="text-white text-center rgba-stylish-strong py-5 px-4">
+            <div class="py-5">
+
+                <!-- Content -->
+                <h5 class="h5 orange-text"><i class="fas fa-camera-retro"></i>Data Exploration</h5>
+                <h2 class="card-title h1 my-4 py-2">2018 US Flights</h2>
+                <p class="h4 mb-4 pb-2 px-md-5 mx-md-5">This analysis uses the U.S. Department of Transportation's (DOT)
+                    Bureau of Transportation Statistics and tracks the on-time performance of domestic airports and
+                    flights operated by large air carriers. Summary information on the number of on-time, delayed,
+                    canceled, and diverted flights is determined using this dataset of 2018 flight delays and
+                    cancellations.</p>
+                <a class="btn peach-gradient"><i class="fas fa-clone left"></i></a>
+
+            </div>
+        </div>
+    </div>
+    <!-- Jumbotron -->
+
+
+    <div class="row">
+        <div class="card text-dark bg-white mb-0" style="width: 100rem">
+            <h4 class="card-header">
+                <i class="material-icons">insert_chart</i>
+                FLIGHTS OVERVIEW
+            </h4>
+            <div class="card-body">
+                <p class="card-text">
+                </p>
+                <div id="dashboard"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="card text-dark bg-white mb-0" style="width: 100rem">
+            <h4 class="card-header">
+                <i class="material-icons">flight_takeoff</i>
+                TOP FLIGHTS
+            </h4>
+            <div class="card-body">
+                <p class="card-text">Summary of airlines with total planes and flights
+                </p>
+                <div id="plot"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="card text-dark bg-white mb-0" style="width: 100rem">
+            <h4 class="card-header">
+                <i class="material-icons">flight_land</i>
+                DELAYED FLIGHTS
+            </h4>
+            <div class="card-body">
+                <p class="card-text">Summary of airlines with flight delays
+                </p>
+                <div id="plot2"></div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- new search and pie -->
+
+
+    <div class="card-deck">
+        <div class="card text-dark bg-light mb-3" style="width: 20rem;">
+            <h5 class="card-header">
+                <i class="material-icons">search</i>
+                Delayed Flight Search
+            </h5>
+            <div class="card-body">
+                <h5 class="card-title">Enter your future flight info to get past delay statistics:</h5>
+                <form>
+                    <div class="form-group">
+                        <ul class="list-group" id="filters">
+                            <li class="filter list-group-item">
+                                <label for="airline">Select Airline</label>
+                                <select id="selDataset" onchange="optionChanged(this.value)"></select>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="form-group">
+                        <ul class="list-group" id="filters">
+                            <li class="filter list-group-item">
+                                <label for="origin">Enter origin airport </label>
+                                <input name="autocomplete" type="text" id="autocomplete1" class="form-control"
+                                    placeholder="San Francisco International Airport">
+                                <ul id="dest">
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="form-group">
+                        <ul class="list-group" id="filters">
+                            <li class="filter list-group-item">
+                                <label for="dest">Enter destination airport</label>
+                                <input name="autocomplete" type="text" id="autocomplete2" class="form-control"
+                                    placeholder="San Francisco International Airport">
+                            </li>
+                        </ul>
+                        </li>
+                        </ul>
+                    </div>
+
+                    <div class="form-group">
+                        <ul class="list-group" id="filters">
+                            <li class="filter list-group-item">
+                                <label for="month">Enter month</label>
+                                <select name="month" id="month">
+                                    <option value="1">Jan</option>
+                                    <option value="2">Feb</option>
+                                    <option value="3">Mar</option>
+                                    <option value="4">Apr</option>
+                                    <option value="5">May</option>
+                                    <option value="6">Jun</option>
+                                    <option value="7">Jul</option>
+                                    <option value="8">Aug</option>
+                                    <option value="9">Sep</option>
+                                    <option value="10">Oct</option>
+                                    <option value="11">Nov</option>
+                                    <option value="12">Dec</option>
+                                </select>
+                            </li>
+                        </ul>
+                    </div>
+
+
+                    <div id="table-area" class="">
+                        <table id="searchTable" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th class="table-head">Performance</th>
+                                    <th class="table-head">TotalFlights</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+
+                    <button id="filter-btn" type="submit" class="btn btn-primary">Submit</button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+
+
+        <!-- <div class="card-deck"> -->
+        <div class="card text-dark bg-light mb-3" style="width: 20rem;">
+            <h5 class="card-header">
+                <i class="material-icons">search</i>
+                Delayed Flights Reason
+            </h5>
+            <div class="card-body">
+
+                <form>
+                    <div class="form-group">
+                        <ul class="list-group" id="filters">
+                            <li class="filter list-group-item">
+                                <label for="airline">Select Airline</label>
+                                <select id="delayReason" onchange="optionChanged2(this.value)"></select>
+                                <div id="plot3">
+
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- map -->
+
+    <div class="row">
+        <div class="card text-dark bg-white mb-0" style="width: 100rem">
+            <h4 class="card-header">
+                <i class="material-icons">public</i>
+                AIRPORT PERFORMANCE MAP
+            </h4>
+            <div class="card-body">
+                <div id="map"></div>
+                <p class="card-text">
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        $(function () {
+            $("#autocomplete1").autocomplete({
+                source: function (request, response) {
+                    $.getJSON("{{url_for('autocomplete')}}", {
+                        q: request.term, // in flask, "q" will be the argument to look for using request.args
+                    }, function (data) {
+                        response(data.matching_results); // matching_results from jsonify
+                    });
+
+                },
+                minLength: 2,
+                select: function (event, ui) {
+                    console.log(ui.item.value); // not in your question, but might help later
+                }
+            });
+
+            $("#autocomplete2").autocomplete({
+                source: function (request, response) {
+                    $.getJSON("{{url_for('autocomplete')}}", {
+                        q: request.term, // in flask, "q" will be the argument to look for using request.args
+                    }, function (data) {
+                        response(data.matching_results); // matching_results from jsonify
+                    });
+                },
+                minLength: 2,
+                select: function (event, ui) {
+                    console.log(ui.item.value);
+                }
+            });
+        })
+
+    </script>
+
+
+    <!-- applications -->
+
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script type="text/javascript" src="static/js/overview.js"></script>
+    <script type="text/javascript" src="static/js/bar_charts.js"></script>
+    <!-- <script type="text/javascript" src="static/js/search.js"></script> -->
+    <!-- <script type="text/javascript" src="static/js/delay_pie.js"></script> -->
+    <script type="text/javascript" src="static/js/airports.js"></script>
+    <script type="text/javascript" src="static/js/logic.js"></script>
+
+
+
+    <!-- data -->
+
+
+    <script>
+        var freqData =
+            [{
+                Airline: 'Alaska Airlines',
+                freq:
+                    { cancelled: 2207, delay: 30707, diverted: 575, ontime: 212272 }
+            },
+            {
+                Airline: 'Allegiant Air',
+                freq:
+                    { cancelled: 769, delay: 19727, diverted: 260, ontime: 75465 }
+            },
+            {
+                Airline: 'American Airlines',
+                freq:
+                {
+                    cancelled: 14945, delay: 159237, diverted: 2346, ontime: 740290
+                }
+            },
+            {
+                Airline: 'American Eagle Airlines',
+                freq:
+                    { cancelled: 10655, delay: 47166, diverted: 849, ontime: 237331 }
+            },
+            {
+                Airline: 'Atlantic Southeast Airlines',
+                freq:
+                    { cancelled: 5670, delay: 35613, diverted: 637, ontime: 160970 }
+            },
+            {
+                Airline: 'Delta Air Lines',
+                freq:
+                    { cancelled: 3528, delay: 128229, diverted: 1918, ontime: 815608 }
+            },
+            {
+                Airline: 'Endeavor Air',
+                freq:
+                    { cancelled: 6355, delay: 40185, diverted: 560, ontime: 198817 }
+            },
+            {
+                Airline: 'Frontier Airlines',
+                freq:
+                    { cancelled: 2327, delay: 33550, diverted: 185, ontime: 83973 }
+            },
+            {
+                Airline: 'Hawaiian Airlines',
+                freq: { cancelled: 250, delay: 5922, diverted: 98, ontime: 77453 }
+            },
+            {
+                Airline: 'JetBlue Airways',
+                freq:
+                    { cancelled: 6419, delay: 77579, diverted: 833, ontime: 220179 }
+            },
+            {
+                Airline: 'Mesa Airlines',
+                freq:
+                    { cancelled: 5529, delay: 35954, diverted: 515, ontime: 173140 }
+            },
+            {
+                Airline: 'Midwest Airlines',
+                freq:
+                    { cancelled: 10100, delay: 47025, diverted: 738, ontime: 258227 }
+            },
+            {
+                Airline: 'PSA Airlines',
+                freq:
+                    { cancelled: 11870, delay: 52328, diverted: 803, ontime: 213456 }
+            },
+            {
+                Airline: 'Skywest Airlines',
+                freq:
+                {
+                    cancelled: 10610, delay: 121055, diverted: 2731, ontime: 639741
+                }
+            },
+            {
+                Airline: 'Southwest Airlines',
+                freq:
+                {
+                    cancelled: 18275, delay: 287251, diverted: 2668, ontime: 1044358
+                }
+            },
+            {
+                Airline: 'Spirit Air Lines',
+                freq:
+                    { cancelled: 1737, delay: 27934, diverted: 312, ontime: 146195 }
+            },
+            {
+                Airline: 'United Air Lines',
+                freq:
+                    { cancelled: 4903, delay: 102698, diverted: 1747, ontime: 512217 }
+            },
+            {
+                Airline: 'Virgin America',
+                freq: { cancelled: 433, delay: 2913, diverted: 84, ontime: 14240 }
+            }]
+
+        dashboard('#dashboard', freqData);
+    </script>
+
+    <script>
+
+        d3.json("/airlineName", function (names) {
+            names.forEach(n => {
+                d3.select("#selDataset")
+                    .append("option")
+                    .text(n)
+                    .property("value", n);
+            })
+        });
+        // for building the delay reason bar chart
+        function init() {
+            let namesStore = []
+            d3.json("/airlineName", function (names) {
+                names.forEach(n => {
+                    namesStore.push(n)
+                    d3.select("#delayReason")
+                        .append("option")
+                        .text(n)
+                        .property("value", n);
+                })
+                buildCharts(namesStore[0])
+            });
+
+        }
+
+        init();
+
+
+        function optionChanged2(name) {
+            buildCharts(name);
+        };
+
+
+        function buildCharts(name) {
+            let url = `/delayReasons/${name}`
+            d3.json(url, function (data) {
+                console.log(data)
+                let values = data.delayFlightsNum
+                let labels = data.delayType
+                var data = [{
+                    values: values,
+                    labels: labels,
+                    type: 'pie'
+                }];
+
+                var layout = {
+                    height: 400,
+                    width: 500
+                };
+
+                Plotly.newPlot('plot3', data, layout);
+
+            })
+        }
+
+
+        // for search form
+        d3.select('#filter-btn').on('click', function (e) {
+            d3.event.preventDefault();
+            console.log("working")
+            renderTable()
+        });
+
+        function optionChanged(airline) {
+            return airline
+        };
+
+        function renderTable() {
+            d3.selectAll('td').remove();
+            let airline = d3.select('#selDataset').node().value;
+            let destAirport = d3.select('#autocomplete1').node().value;
+            let originAirport = d3.select('#autocomplete2').node().value;
+            let month = d3.select('#month').node().value;
+            let url = `/delaySearch/${airline}/${destAirport}/${originAirport}/${month}`
+            // let url = `/delayReasons/${name}`
+            d3.json(url, function (data) {
+                console.log(data)
+
+                if (data.length == 0) {
+                    showMessage()
+                } else {
+                    showTable(data)
+                }
+            })
+
+
+        }
+
+        function showTable(dataGoHere) {
+            let myTable = document.getElementById("searchTable")
+            dataGoHere.forEach(d => {
+                let mynewTr = document.createElement('tr');
+                myTable.appendChild(mynewTr);
+                dataToshow = []
+                dataToshow.push(d.Performance);
+                dataToshow.push(d.TotalFlights);
+                dataToshow.forEach(x => {
+                    let myTd = document.createElement('td');
+                    myTd.innerHTML = x;
+                    mynewTr.appendChild(myTd);
+                })
+            });
+            console.log("done")
+
+        };
+        function showMessage() {
+            let myTable = document.getElementById("searchTable")
+            let mynewTr = document.createElement('tr');
+            myTable.appendChild(mynewTr);
+            let myTd = document.createElement('td');
+            myTd.innerHTML = "Such Flights did not exists";
+            mynewTr.appendChild(myTd);
+
+        };
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,105 @@
+.material-icons {
+    padding: 5px;
+    vertical-align: middle;
+  }
+  
+  /* .card-body {
+    margin: 1.25rem 0;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+  } */
+  
+    .card-header{
+      margin: 20;
+      font-weight: bold
+    }
+  
+  .mdc-card__media {
+    background-image: url(https://via.placeholder.com/100x100)
+  }
+  
+  .card-body {
+    padding: 16px;
+  }
+
+  .row {
+    padding: 0px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+    #map {
+      height: 500px;
+      width: 1150px;
+  }
+
+
+/* adsfasdfasdfad */
+
+
+
+body {
+  width: 1200px;
+  margin: 50px auto;
+}
+
+path {
+  stroke: #fff;
+}
+
+path:hover {
+  opacity: 0.9;
+}
+
+rect:hover {
+  fill: orange;
+}
+
+/* rect{
+  width: 30px;
+  border-spacing: 50px;
+  padding: 4px 5px;
+  } */
+
+
+.axis {
+  font: 12px sans-serif;
+}
+
+.legend tr {
+  border-bottom: 1px solid grey;
+}
+
+.legend tr:first-child {
+  border-top: 1px solid grey;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.legend {
+  margin-bottom: 100px;
+  display: inline-flex;
+  border-collapse: collapse;
+  border-spacing: 0px;
+}
+
+.legend td {
+  padding: 4px 5px;
+  vertical-align: bottom;
+}
+
+.legendFreq,
+.legendPerc {
+  align: right;
+  width: 50px;
+}
