@@ -67,17 +67,7 @@ def get_airlines():
         ontime_pct.append(a.ONTIME_PCT)
         diverted_pct.append(a.DIVERTED_PCT)
         cancelled_pct.append(a.CANCELLED_PCT)
-
         
-    # airlines_dict = {}
-    # airlines_dict["Airline"] = all_airlines
-    # airlines_dict["Total_Number_of_Planes"] = all_planes
-    # airlines_dict["Total Number of Fligths"] = all_flights
-    # airlines_dict["Delayed Flights (%)"] = delay_pct
-    # airlines_dict["Ontime Flights (%)"] = ontime_pct
-    # airlines_dict["Diverted Flights (%)"] = diverted_pct
-    # airlines_dict["Cancelled Flights (%)"] = cancelled_pct
-
     airlines_dict = {}
     airlines_dict["Airline"] = all_airlines
     airlines_dict["Total_Number_of_Planes"] = all_planes
@@ -145,17 +135,6 @@ def get_delay_flights():
     session.close()
     return jsonify(airlines_dict)
 
-# @app.route("/delayReasons")
-# def get_delay_reasons():
-#     results = []
-#     for row in session.query(delay_data).all():
-#         results.append({'Airline': row.AIRLINE, 'Total Number of Cancelled Flights':row.FLIGHT_NUMBER,
-#                         'Carrier delay': row.CARRIER_DELAY,'Weather delay':row.WEATHER_DELAY,
-#                         'NAS delay':row.NAS_DELAY,'Security delay':row.SECURITY_DELAY,
-#                         'Late aircraft delay': row.LATE_AIRCRAFT_DELAY})
-
-#     session.close()
-#     return jsonify(results)
 @app.route("/delayReasons/<airline>")
 def get_delay_reasons(airline):
 
